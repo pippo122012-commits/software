@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+reports/
+*.egg-info/
+api-docs/
+.uv-cache/
+analysis.log
+
+# Output from the original ad hoc script
+report.json

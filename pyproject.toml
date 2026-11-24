@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fieldcheck-workshop"
+version = "0.1.0"
+description = "Synthetic reflectance analysis for a research software workshop"
+requires-python = ">=3.12,<3.16"
+dependencies = ["numpy>=2,<3"]
+# This training project is not intended for upload to a public package index.
+classifiers = ["Private :: Do Not Upload"]
+
+[project.scripts]
+fieldcheck = "fieldcheck.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "pytest-cov>=6,<8", "ruff>=0.14,<1"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fieldcheck"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+filterwarnings = ["error"]
+
+[tool.ruff]
+extend-exclude = ["archive"]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B"]

@@ -1,0 +1,21 @@
+    """Compute NDVI for one observation.
+
+    Parameters
+    ----------
+    red, nir : float
+        Already-scaled, dimensionless reflectances in [0, 1].
+    quality : int
+        0 means clear; 1 excludes the row.
+
+    Returns
+    -------
+    float
+        (nir - red) / (nir + red), or NaN for excluded rows, nonfinite
+        or out-of-range bands, or a zero denominator.
+        Negative and zero results are valid.
+
+    Raises
+    ------
+    ValueError
+        If quality is neither 0 nor 1.
+    """
