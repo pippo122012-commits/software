@@ -1,5 +1,5 @@
 # Fieldcheck: an ad hoc analysis
-
+Hallo:D
 This is the starting material for Lab 1. It contains one Python script and
 synthetic CSV data. You will develop this script into a structured, tested,
 documented Python package during the workshop.
