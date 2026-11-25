@@ -1,0 +1,12 @@
+# .gitlab-ci.yml
+
+stages:
+  - test
+
+checks:
+  stage: test
+  image: python:3.12
+  before_script:
+    - pip install uv
+  script:
+    - uv run --locked python scripts/check_project.py
