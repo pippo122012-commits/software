@@ -30,7 +30,6 @@ def ndvi_value(red, nir, quality):
     return (nir - red) / (nir + red)
 
 
-
 def ndvi(red, nir, quality):
     """Supplied wrapper: apply the scalar function to equally shaped 1-D inputs."""
     red = np.asarray(red, dtype=float)
@@ -46,7 +45,7 @@ def ndvi(red, nir, quality):
 
 def summarize(values):
     """Lab 2: extract the script's filtering, counting, and mean calculation."""
-    
+
     values = np.asarray(values, dtype=float)
     if values.ndim != 1:
         raise ValueError("values must be 1-D")
@@ -62,8 +61,8 @@ def summarize(values):
 
     n_total = len(values)
     n_valid = sum(value != 0 for value in valid_values)  # DEFECT: zählt ≠ 0, nicht len
-    n_valid = len(valid_values) 
-    
+    n_valid = len(valid_values)
+
     if valid_values:
         mean_ndvi = sum(valid_values) / len(valid_values)
     else:
@@ -74,4 +73,3 @@ def summarize(values):
         "n_valid": n_valid,
         "mean_ndvi": mean_ndvi,
     }
- 
