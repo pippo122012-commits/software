@@ -32,6 +32,7 @@ def main(argv=None):
         red, nir, quality = read_csv(args.input)
         values = ndvi(red, nir, quality)
         report = summarize(values)
+        logger.info("Valid: %d, Excluded: %d", report["n_valid"], report["n_total"] - report["n_valid"])
         if report["n_valid"] == 0:
             raise ValueError("need at least 1 valid observations")
         report["input_sha256"] = hashlib.sha256(args.input.read_bytes()).hexdigest()

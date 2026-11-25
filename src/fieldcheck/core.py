@@ -6,11 +6,27 @@ import numpy as np
 
 
 def ndvi_value(red, nir, quality):
-    """Lab 2: extract the script's calculation for one observation."""
-    # Move the calculation from archive/analysis.py here; return its value.
-    # Preserve its existing numerical behavior for now, including its defects.
+    """Calculate NDVI for one observation, applying the measurement rules."""
+    # Schema check: quality must be 0 or 1
+    if quality not in (0, 1):
+        raise ValueError(f"Unknown quality code: {quality!r}")
+
+    # Excluded by quality flag
+    if quality == 1:
+        return float("nan")
+
+    # Both bands must be finite
+    if not (math.isfinite(red) and math.isfinite(nir)):
+        return float("nan")
+
+    # Both bands must be in [0, 1]
+    if not (0.0 <= red <= 1.0 and 0.0 <= nir <= 1.0):
+        return float("nan")
+
+    # Denominator must be non-zero
     if red + nir == 0:
         return float("nan")
+
     return (nir - red) / (nir + red)
 
 
@@ -30,6 +46,7 @@ def ndvi(red, nir, quality):
 
 def summarize(values):
     """Lab 2: extract the script's filtering, counting, and mean calculation."""
+    
     values = np.asarray(values, dtype=float)
     if values.ndim != 1:
         raise ValueError("values must be 1-D")
@@ -45,6 +62,8 @@ def summarize(values):
 
     n_total = len(values)
     n_valid = sum(value != 0 for value in valid_values)  # DEFECT: zählt ≠ 0, nicht len
+    n_valid = len(valid_values) 
+    
     if valid_values:
         mean_ndvi = sum(valid_values) / len(valid_values)
     else:

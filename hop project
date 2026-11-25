@@ -1,0 +1,168 @@
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e07b330[m
+[1m--- /dev/null[m
+[1m+++ b/.gitignore[m
+[36m@@ -0,0 +1,15 @@[m
+[32m+[m[32m.venv/[m
+[32m+[m[32m__pycache__/[m
+[32m+[m[32m.pytest_cache/[m
+[32m+[m[32m.ruff_cache/[m
+[32m+[m[32m.coverage[m
+[32m+[m[32mhtmlcov/[m
+[32m+[m[32mdist/[m
+[32m+[m[32mreports/[m
+[32m+[m[32m*.egg-info/[m
+[32m+[m[32mapi-docs/[m
+[32m+[m[32m.uv-cache/[m
+[32m+[m[32manalysis.log[m
+[32m+[m
+[32m+[m[32m# Output from the original ad hoc script[m
+[32m+[m[32mreport.json[m
+[1mdiff --git a/.python-version b/.python-version[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e4fba21[m
+[1m--- /dev/null[m
+[1m+++ b/.python-version[m
+[36m@@ -0,0 +1 @@[m
+[32m+[m[32m3.12[m
+[1mdiff --git a/README.md b/README.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..cd4dbcc[m
+[1m--- /dev/null[m
+[1m+++ b/README.md[m
+[36m@@ -0,0 +1,28 @@[m
+[32m+[m[32m# Fieldcheck: an ad hoc analysis[m
+[32m+[m
+[32m+[m[32mThis is the starting material for Lab 1. It contains one Python script and[m
+[32m+[m[32msynthetic CSV data. You will develop this script into a structured, tested,[m
+[32m+[m[32mdocumented Python package during the workshop.[m
+[32m+[m
+[32m+[m[32mCopy this folder to `fieldcheck-work`, beside the `course-2026` materials folder.[m
+[32m+[m[32mOpen a terminal in your copy and try:[m
+[32m+[m
+[32m+[m[32m```sh[m
+[32m+[m[32mpython analysis.py[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mUse `python3` if that is your Python 3 launcher. The script uses only Python's[m
+[32m+[m[32mstandard library. No package installation or project environment is needed yet.[m
+[32m+[m[32mIt reads `data/tiny.csv` and writes `report.json` in the current directory.[m
+[32m+[m
+[32m+[m[32mRead the course's `docs/EXERCISE.md` for the data rules and worked answer, then[m
+[32m+[m[32mfollow Lab 1 in `docs/WORKBOOK.md`. Keep the CSV inputs unchanged. Record what[m
+[32m+[m[32mhappens when you run the script and the issues you find while reading it.[m
+[32m+[m[32mLook beyond numerical correctness: can you understand, reuse, test,[m
+[32m+[m[32mor run this program on another input? Do not repair it during Lab 1.[m
+[32m+[m
+[32m+[m[32mThe later labs introduce functions, package structure, uv, Git, tests,[m
+[32m+[m[32mdocumentation, automation, and delivery. Their scaffolds are in the course[m
+[32m+[m[32mmaterials; they are not part of this starting script.[m
+[32m+[m
+[32m+[m[32mAll data are synthetic. Do not publish this teaching project.[m
+[1mdiff --git a/archive/analysis.py b/archive/analysis.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..9c7908b[m
+[1m--- /dev/null[m
+[1m+++ b/archive/analysis.py[m
+[36m@@ -0,0 +1,38 @@[m
+[32m+[m[32mimport csv[m
+[32m+[m[32mimport json[m
+[32m+[m[32mimport math[m
+[32m+[m
+[32m+[m[32mf = open("data/tiny.csv")[m
+[32m+[m[32mrows = list(csv.DictReader(f))[m
+[32m+[m[32mvalues = [][m
+[32m+[m
+[32m+[m[32mfor row in rows:[m
+[32m+[m[32m    red = float(row["red"])[m
+[32m+[m[32m    nir = float(row["nir"])[m
+[32m+[m[32m    quality = int(row["quality"])[m
+[32m+[m[32m    if red + nir == 0:[m
+[32m+[m[32m        value = float("nan")[m
+[32m+[m[32m    else:[m
+[32m+[m[32m        value = (nir - red) / (nir + red)[m
+[32m+[m[32m    values.append(value)[m
+[32m+[m[32m    print(row["id"], value)[m
+[32m+[m
+[32m+[m[32mvalid_values = [][m
+[32m+[m[32mfor value in values:[m
+[32m+[m[32m    if math.isfinite(value):[m
+[32m+[m[32m        valid_values.append(value)[m
+[32m+[m
+[32m+[m[32mn = sum(value != 0 for value in valid_values)[m
+[32m+[m[32mmean = sum(valid_values) / len(valid_values)[m
+[32m+[m[32mprint("total:", len(values), "valid:", n, "mean:", mean)[m
+[32m+[m
+[32m+[m[32mout = open("report.json", "w")[m
+[32m+[m[32mjson.dump([m
+[32m+[m[32m    {[m
+[32m+[m[32m        "n_total": len(values),[m
+[32m+[m[32m        "n_valid": sum(value != 0 for value in valid_values),[m
+[32m+[m[32m        "mean_ndvi": sum(valid_values) / len(valid_values),[m
+[32m+[m[32m    },[m
+[32m+[m[32m    out,[m
+[32m+[m[32m)[m
+[32m+[m[32mout.close()[m
+[1mdiff --git a/archive/baseline.json b/archive/baseline.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..80b53ce[m
+[1m--- /dev/null[m
+[1m+++ b/archive/baseline.json[m
+[36m@@ -0,0 +1 @@[m
+[32m+[m[32m{"n_total": 8, "n_valid": 5, "mean_ndvi": 0.18333333333333335}[m
+\ No newline at end of file[m
+[1mdiff --git a/data/README.md b/data/README.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..47b1874[m
+[1m--- /dev/null[m
+[1m+++ b/data/README.md[m
+[36m@@ -0,0 +1,50 @@[m
+[32m+[m[32m# Synthetic observations[m
+[32m+[m
+[32m+[m[32mThese hand-authored rows are teaching data, not satellite observations.[m
+[32m+[m[32m`red` and `nir` are already-scaled dimensionless reflectances. The workshop's[m
+[32m+[m[32m[0,1] and binary quality rules are an explicit simplification, not a universal[m
+[32m+[m[32msatellite-product specification. Real products need their own scaling, masks,[m
+[32m+[m[32mspatial alignment, and scientific validation.[m
+[32m+[m
+[32m+[m[32mFor `tiny.csv`, valid NDVIs are `[0.5, -0.5, 0, 1]`; the other four rows are[m
+[32m+[m[32minvalid. Expected counts: total 8, valid 4. Expected mean: 0.25. Compare floating[m
+[32m+[m[32mpoint values with a tolerance; no random inputs or network downloads are needed.[m
+[32m+[m
+[32m+[m[32m## Work out the answer before running the code[m
+[32m+[m
+[32m+[m[32mFor each row, apply the quality, finite-value, range, and positive-denominator[m
+[32m+[m[32mrules before calculating `(nir - red) / (nir + red)`.[m
+[32m+[m
+[32m+[m[32m| Row | Red | NIR | Quality | Expected NDVI | Reason |[m
+[32m+[m[32m| --- | --- | --- | --- | --- | --- |[m
+[32m+[m[32m| `a` | `0.2` | `0.6` | `0` | `0.5` | Clear, finite bands within range. |[m
+[32m+[m[32m| `b` | `0.6` | `0.2` | `0` | `-0.5` | A negative result remains a valid measurement. |[m
+[32m+[m[32m| `c` | `0.3` | `0.3` | `0` | `0.0` | Equal nonzero bands; zero must count as valid. |[m
+[32m+[m[32m| `d` | `0.0` | `0.8` | `0` | `1.0` | One zero band is allowed; the sum is positive. |[m
+[32m+[m[32m| `e` | `0.0` | `0.0` | `0` | `NaN` | Both bands zero: the denominator would be zero. |[m
+[32m+[m[32m| `f` | `NaN` | `0.4` | `0` | `NaN` | A band is missing. |[m
+[32m+[m[32m| `g` | `0.2` | `0.8` | `1` | `NaN` | The quality flag excludes an otherwise finite result. |[m
+[32m+[m[32m| `h` | `1.2` | `0.4` | `0` | `NaN` | Red exceeds the workshop's allowed range. |[m
+[32m+[m
+[32m+[m[32mThe four retained values sum to `1.0`; dividing by `4` gives `0.25`.[m
+[32m+[m[32mThese hand-computed expectations are the independent reference for the tests.[m
+[32m+[m
+[32m+[m[32mRun `uv run python examples/inspect_rows.py` from the project root to display[m
+[32m+[m[32mwhat your current implementation actually computes. Compare row IDs with the[m
+[32m+[m[32mtable, including excluded rows. The helper calls your code; its output is an[m
+[32m+[m[32mobservation, not proof of correctness. The starter will disagree on rows `g`[m
+[32m+[m[32mand `h` and on the valid count. After Labs 4 and 5 all rows should agree.[m
+[32m+[m
+[32m+[m[32m## Connect the exercise to your EO work[m
+[32m+[m
+[32m+[m[32mBefore using these checks on a real product, identify its band mapping, scale[m
+[32m+[m[32mand offset, nodata values, quality-mask definition, and spatial/temporal[m
+[32m+[m[32malignment. Write down which observations the statistic should include. The[m
+[32m+[m[32mbinary flag and `[0,1]` rule above are choices for this exercise, not product[m
+[32m+[m[32mmetadata. An eight-row test does not establish the scientific suitability of[m
+[32m+[m[32ma real dataset or processing chain.[m
+[32m+[m
+[32m+[m[32mThe [USGS NDVI reference](https://www.usgs.gov/landsat-missions/landsat-normalized-difference-vegetation-index)[m
+[32m+
